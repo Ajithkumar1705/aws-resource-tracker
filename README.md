@@ -53,20 +53,31 @@ aws-resource-tracker/
 
 ---
 
-# Architecture Structure
+## Architecture Structure
 
-
+```text
 AWS CLI
    ↓
 Resource Collection
    ↓
 current_counts.txt
    ↓
-Compare
+Compare with previous_counts.txt
    ↓
-SNS Notification
-   ↓
-previous_counts.txt
+Changes Detected?
+   │
+   ├── No → Exit
+   │
+   └── Yes
+         ↓
+    SNS Notification
+         ↓
+Update previous_counts.txt
+         ↓
+Update Log File
+```
+
+
 ## How It Works
 
 1. The script queries AWS resources using AWS CLI.
