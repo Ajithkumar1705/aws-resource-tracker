@@ -1,27 +1,28 @@
 #!/bin/bash
-##################
-#Project : AWS-Resource-Tracker
-#Author : Ajith Kumar E
-#Date : 06-06-2026
-#Version : v1.0.0
+
+
+# --------------------------------------------------
+# Project : AWS Resource Tracker
+# Author  : Ajith Kumar E
+# Version : 1.0.0
 #
-#################
-#
-#
-# Description:
-# This script monitors AWS resources using AWS CLI and collects inventory
-# information for EC2 instances, S3 buckets, Lambda functions, IAM users,
-# VPCs, and Security Groups. It compares the current resource count with
-# previous runs, logs the results, and sends email notifications when
-# resource changes are detected.
-#
+# Tracks AWS resources and sends SNS notifications
+# when inventory changes are detected.
+# --------------------------------------------------
 # Technologies: Bash, AWS CLI
+
+
 CURRENT_FILE="current_counts.txt"
 PREVIOUS_FILE="previous_counts.txt"
 LOG_FILE="log/aws_resource_tracker.log"
 {
-	echo "executed at $(date)"
-#list EC2 Instances
+
+set -euo pipefail
+
+echo "===================================" >> "$LOG_FILE"
+echo "Execution: $(date)" >> "$LOG_FILE"
+
+# list of EC2 Instances
 
 echo " EC2 - Instances list "
 aws ec2 describe-instances
@@ -88,7 +89,7 @@ fi
 
 #Email Notification
 
-TOPIC_ARN="arn:aws:sns:ap-south-1:666432071447:aws-resource-tracker-alerts"
+TOPIC_ARN="${SNS_TOPIC_ARN}"
 
 if ! diff "$PREVIOUS_FILE" "$CURRENT_FILE" > /dev/null; then
 
